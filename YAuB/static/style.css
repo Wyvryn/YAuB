@@ -1,0 +1,5 @@
+.fa{display:inline-block;width:1em;height:1em;background-size:contain; vertical-align: middle;margin-top: -0.125em}
+
+.table-condensed th, .table-condensed td {
+    padding: .3rem;
+}

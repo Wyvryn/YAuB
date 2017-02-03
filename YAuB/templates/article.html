@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1>{{ article.title }}</h1>
+<div class="text-xs-right">
+    <small class="text-muted">
+        <i>By {{article.authorname()}}</i>
+    </small>
+</div>
+<hr />
+{% if article.banner %}
+<img src="{{ url_for('static', filename='img/' + article.banner) }}" height="200px"
+    width="100%">
+<hr />
+{% endif %}
+{{ html|safe }}
+{% endblock %}

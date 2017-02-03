@@ -1,0 +1,117 @@
+<!doctype html>
+
+<head>
+    {% if firstrun is not defined %}
+    <title>{{ models.getBlogName() }}</title>
+    {% else %}
+    <title>YAuM - First Run</title>
+    {% endif %}
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}"/>
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='libs/bootstrap/dist/css/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='libs/tether/dist/css/tether.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/bootstrap-tagsinput/dist/bootstrap-tagsinput.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/svg-awesome/css/svg-awesome-bw.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='libs/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}"/>
+
+    <script src={{ url_for( 'static', filename='libs/jquery/dist/jquery.min.js' ) }}></script>
+    <script src={{ url_for( 'static', filename='libs/moment/min/moment.min.js' ) }}></script>
+    <script src={{ url_for( 'static', filename='libs/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}></script>
+    <script src={{ url_for( 'static', filename='libs/tether/dist/js/tether.min.js') }}></script>
+    <script src={{ url_for( 'static', filename='libs/bootstrap/dist/js/bootstrap.min.js') }}></script>
+    <script src={{ url_for( 'static', filename='libs/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js') }}></script>
+
+    {% if header_includes is defined %}
+    {% for include in header_includes %}
+    {{ include | safe }}
+    {% endfor %}
+    {% endif %}
+
+
+</head>
+
+<body style="padding-top: 5rem">
+    <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">
+        <!-- Navbar - Do not show if we're doing initial setup -->
+        {% if firstrun is not defined %}
+        <a class="navbar-brand hidden-xs-down" href="{{ url_for('main.home') }}">{{ models.getBlogName() }}</a>
+        <a class="navbar-brand hidden-sm-up btn btn-secondary-outline" role="button" href="{{ url_for('main.home') }}"><i class="fa fa-home"></i></a>
+        <div class="btn-group pull-xs-right">
+            <div>
+                {% if current_user and current_user.is_authenticated %}
+                <div class="pull-xs-right">
+                    Logged in as <a title="User Settings" href={{ url_for(
+                        'main.admin_author') }}>{{current_user.username}}</a>&nbsp;&nbsp;<span class="btn-group"
+                        role="group"><a class="btn btn-secondary-outline" title="Create New Article" href={{ url_for('main.admin_article') }}><i class="fa fa-plus"></i></a><a class="btn btn-secondary-outline" title="Blog Settings" href={{ url_for('main.admin_blog') }}><i class="fa fa-gear"></i></a><a class="btn btn-secondary-outline" title="Log Out" href={{ url_for('main.logout') }}><i class="fa fa-sign-out"></i></a></span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <a class="navbar-brand hidden-xs-down" href="#">Initial Setup</a> {% endif
+        %}
+    </nav>
+    <div class="container">
+        <!-- Alerts -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="row">
+            <div class="alert alert-info" role="alert">
+                {% for message in messages %}
+                <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% endwith %}
+        <!-- End Alerts -->
+        <!-- Main Body -->
+        <div class="row">
+            <!-- Content -->
+            <div class="{% if sidebar %}col-md-8{% else %}col-md-12{% endif %} col-sm-12 col-xs-12">
+                {% block body %}{% endblock %}
+            </div>
+            <!-- End Content -->
+            <!-- Sidebar -->
+            {% if sidebar %}
+            <div class="col-md-3 col-md-offset-1 hidden-sm-down">
+                <h4>About</h4>
+                <p>{{ models.getAbout() }}</p>
+                <div>
+                    Top Tags:
+                    <hr />
+                    {% for tag in models.topTags() %}
+                    <div class="row">
+                        <div class="col-xs-2">
+                            {{ tag[1] }}
+                        </div>
+                        <div class="col-xs-10">
+                            <a class="label label-default" href="{{ url_for('main.tag', id=tag[0]) }}">{{ tag[0] }}</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <!-- End Sidebar -->
+        </div>
+        <!-- End Main Body -->
+        <hr />
+        <!-- Footer -->
+        <div class="row text-xs-center text-muted">
+            <small><i>Made by Wyvryn - Show some love on <a href="http://github.com/wyvryn">GitHub</a></i> | <a href="{{ url_for('main.login') }}">Admin</a></small>
+        </div>
+        <!-- End Footer -->
+    </div>
+
+    {% if footer_includes is defined %}
+    {% for include in footer_includes %}
+    {{ include | safe }}
+    {% endfor %}
+    {% endif %}
+
+</body>
+
+</html>
