@@ -1,4 +1,4 @@
-Yet Another Flask Microblog
+Yet Another Micro-Blog
 ===========================
 
 This is a simple microblog written on top of [Flask](http://flask.pocoo.org/) with a [SQLite](https://www.sqlite.org/) backend.
